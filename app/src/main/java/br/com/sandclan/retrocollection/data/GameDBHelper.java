@@ -5,18 +5,41 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class GameDBHelper extends SQLiteOpenHelper{
-    public GameDBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, name, factory, version);
+ class GameDBHelper extends SQLiteOpenHelper {
+    private static final int DATABASE_VERSION = 1;
+    private static final String DATABASE_NAME = "games.db";
+
+     GameDBHelper(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        final String SQL_CREATE_GAMETABLE = "CREATE TABLE " + GameContract.GameEntry.TABLE_NAME + " (" +
+                GameContract.GameEntry._ID + " INTEGER PRIMARY KEY," +
+                GameContract.GameEntry.COLUMN_ID_FROM_MOVIEDBAPI + " TEXT NOT NULL, " +
+                GameContract.GameEntry.COLUMN_GAME_TITLE + " TEXT NOT NULL, " +
+                GameContract.GameEntry.COLUMN_RELEASE_DATE + " TEXT NOT NULL, " +
+                GameContract.GameEntry.COLUMN_LOGO + " TEXT, " +
+                GameContract.GameEntry.COLUMN_COVER_FRONT + " TEXT, " +
+                GameContract.GameEntry.COLUMN_COVER_BACK + " TEXT, " +
+                GameContract.GameEntry.COLUMN_DESCRIPTION + " TEXT, " +
+                GameContract.GameEntry.COLUMN_PLAYERS + " INTEGER, " +
+                GameContract.GameEntry.COLUMN_COOP + " TEXT, " +
+                GameContract.GameEntry.COLUMN_GENRE + " TEXT, " +
+                GameContract.GameEntry.COLUMN_DEVELOPER + " TEXT, " +
+                GameContract.GameEntry.COLUMN_PUBLISHER + " TEXT, " +
+                GameContract.GameEntry.COLUMN_RATING + " REAL, " +
+                GameContract.GameEntry.COLUMN_TRAILER + " TEXT, " +
+                GameContract.GameEntry.COLUMN_OWNED + " INTEGER, " +
+                GameContract.GameEntry.COLUMN_WISHLIST + " INTEGER " +
+                " );";
 
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        db.execSQL("DROP TABLE IF EXISTS " + GameContract.GameEntry.TABLE_NAME);
+        onCreate(db);
     }
 }
