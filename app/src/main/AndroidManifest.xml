@@ -20,7 +20,13 @@
         <activity
             android:name=".ui.ListGamesActivity"
             android:label="@string/title_activity_list_games"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <provider
+            android:name="br.com.sandclan.retrocollection.data.GameContentProvider"
+            android:authorities="br.com.sandclan.retrocollection.data"
+            android:exported="false"
+            android:syncable="true" />
     </application>
 
 </manifest>

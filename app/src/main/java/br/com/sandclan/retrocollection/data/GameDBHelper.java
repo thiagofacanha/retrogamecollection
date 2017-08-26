@@ -15,7 +15,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        final String SQL_CREATE_GAMETABLE = "CREATE TABLE " + GameContract.GameEntry.TABLE_NAME + " (" +
+        final String SQL_CREATE_GAME_TABLE = "CREATE TABLE " + GameContract.GameEntry.TABLE_NAME + " (" +
                 GameContract.GameEntry._ID + " INTEGER PRIMARY KEY," +
                 GameContract.GameEntry.COLUMN_ID_FROM_MOVIEDBAPI + " TEXT NOT NULL, " +
                 GameContract.GameEntry.COLUMN_GAME_TITLE + " TEXT NOT NULL, " +
@@ -32,9 +32,9 @@ import android.database.sqlite.SQLiteOpenHelper;
                 GameContract.GameEntry.COLUMN_RATING + " REAL, " +
                 GameContract.GameEntry.COLUMN_TRAILER + " TEXT, " +
                 GameContract.GameEntry.COLUMN_OWNED + " INTEGER, " +
-                GameContract.GameEntry.COLUMN_WISHLIST + " INTEGER " +
+                GameContract.GameEntry.COLUMN_WISH_LIST + " INTEGER " +
                 " );";
-
+        db.execSQL(SQL_CREATE_GAME_TABLE);
     }
 
     @Override

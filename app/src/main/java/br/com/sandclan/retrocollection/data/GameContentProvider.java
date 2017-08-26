@@ -18,6 +18,29 @@ public class GameContentProvider extends ContentProvider {
     private static final int GAME = 100;
     public static final String AUTHORITY = "br.com.sandclan.retrocollection.data";
     private static final SQLiteQueryBuilder sGameQueryBuilder = new SQLiteQueryBuilder();
+    private static final String sGameSelectionByID =
+            GameContract.GameEntry.TABLE_NAME +
+                    "." + GameContract.GameEntry._ID + " = ? ";
+
+
+    private Cursor getGameByID(Uri uri, String[] projection, String sortOrder) {
+        String gameId = GameContract.GameEntry.getIdFromGame(uri);
+
+        String[] selectionArgs;
+        String selection;
+
+        selection = sGameSelectionByID;
+        selectionArgs = new String[]{gameId};
+
+        return sGameQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                sortOrder
+        );
+    }
 
 
     @Override

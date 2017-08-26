@@ -32,15 +32,15 @@ import android.provider.BaseColumns;
          static final String COLUMN_PUBLISHER= "publisher";
          static final String COLUMN_RATING= "rating";
          static final String COLUMN_TRAILER= "trailer";
-         static final String COLUMN_OWNED= "rating";
-         static final String COLUMN_WISHLIST= "rating";
+         static final String COLUMN_OWNED= "owned";
+         static final String COLUMN_WISH_LIST= "wish_list";
 
          static Uri buildGameByID(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
 
 
-        public static String getIdFromGame(Uri uri) {
+        static String getIdFromGame(Uri uri) {
             return uri.getPathSegments().get(0);
         }
     }
