@@ -40,7 +40,7 @@ public class MainMenuActivity extends AppCompatActivity {
         Retrofit retrofit = new Retrofit.Builder().baseUrl(GameServiceInterface.BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
 
         GameServiceInterface service = retrofit.create(GameServiceInterface.class);
-        final Call<GamePlatform> requestGames = service.listGames();
+        final Call<GamePlatform> requestGames = service.listGames(10,2);
 
         requestGames.enqueue(new Callback<GamePlatform>() {
             @Override
@@ -48,7 +48,6 @@ public class MainMenuActivity extends AppCompatActivity {
                 Toast.makeText(MainMenuActivity.this,"Ok",Toast.LENGTH_SHORT).show();
                 if(response.isSuccessful()){
                     GamePlatform platform = response.body();
-                    GamePlatform platform2 = response.body();
                 }
             }
 
