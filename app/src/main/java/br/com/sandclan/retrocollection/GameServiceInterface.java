@@ -10,8 +10,8 @@ public interface GameServiceInterface {
 
     public static final String BASE_URL = "https://www.giantbomb.com/api/";
     public static final String GENESIS_ID = "6";
-    public static final String GET_GAMES_FROM_GENESIS = "games?api_key=44126173716ea8b3ebbf60a58805e8d00978d092&platforms="+ GENESIS_ID + "&format=json&sort=name";
-    public static final String GET_GAMES_FROM_GENESIS_BY_NAME = "games?api_key=44126173716ea8b3ebbf60a58805e8d00978d092&platforms="+ GENESIS_ID + "&format=json&sort=name";
+    public static final String GET_GAMES_FROM_GENESIS = "games?api_key=YOURAPI&platforms="+ GENESIS_ID + "&format=json&sort=name";
+    public static final String GET_GAMES_FROM_GENESIS_BY_NAME = "games?api_key=YOURAPI&platforms="+ GENESIS_ID + "&format=json&sort=name";
 
     @GET(value = GET_GAMES_FROM_GENESIS)
     Call<GamePlatform> listGames(@Query("offset") int offset,@Query("limit") int limit);
