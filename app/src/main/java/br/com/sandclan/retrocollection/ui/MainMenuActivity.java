@@ -36,25 +36,5 @@ public class MainMenuActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-        Retrofit retrofit = new Retrofit.Builder().baseUrl(GameServiceInterface.BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
-
-        GameServiceInterface service = retrofit.create(GameServiceInterface.class);
-        final Call<GamePlatform> requestGames = service.listGames(10,2);
-
-        requestGames.enqueue(new Callback<GamePlatform>() {
-            @Override
-            public void onResponse(Call<GamePlatform> call, Response<GamePlatform> response) {
-                Toast.makeText(MainMenuActivity.this,"Ok",Toast.LENGTH_SHORT).show();
-                if(response.isSuccessful()){
-                    GamePlatform platform = response.body();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<GamePlatform> call, Throwable t) {
-                Toast.makeText(MainMenuActivity.this,"NOk",Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 }
