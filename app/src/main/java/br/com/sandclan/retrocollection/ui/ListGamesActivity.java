@@ -1,5 +1,6 @@
 package br.com.sandclan.retrocollection.ui;
 
+import android.app.ProgressDialog;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -10,12 +11,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.XMLFormatter;
 
 import br.com.sandclan.retrocollection.GameServiceInterface;
 import br.com.sandclan.retrocollection.R;
@@ -26,12 +30,18 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.SimpleXmlConverterFactory;
+
 
 public class ListGamesActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     private List<Game> games = new ArrayList<>();
     private EditText searchText;
     private GameAdapter adapter;
+    private Retrofit retrofit;
+    private GameServiceInterface service;
+    private ProgressDialog progressDialogLoading;
+    private Button searchButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,44 +50,49 @@ public class ListGamesActivity extends AppCompatActivity implements LoaderManage
         setSupportActionBar(toolbar);
 
         searchText = (EditText) findViewById(R.id.searchText);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-
-        final RecyclerView gameListRecycleView = (RecyclerView) findViewById(R.id.gameRecycleView);
+        searchButton = (Button) findViewById(R.id.searchButton);
+         final RecyclerView gameListRecycleView = (RecyclerView) findViewById(R.id.gameRecycleView);
         adapter = new GameAdapter(ListGamesActivity.this, games);
         gameListRecycleView.setAdapter(adapter);
         gameListRecycleView.setLayoutManager(new LinearLayoutManager(this));
-        fab.setOnClickListener(new View.OnClickListener() {
+
+        retrofit = new Retrofit.Builder().baseUrl(GameServiceInterface.THEGAMEDB_BASE_URL).addConverterFactory(SimpleXmlConverterFactory.create()).build();
+        service = retrofit.create(GameServiceInterface.class);
+        listGames(searchText.getText().toString() + "Shining");
+
+        searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-              //  listGamesByNames(adapter);
+            public void onClick(View v) {
+                listGames(searchText.getText().toString());
             }
         });
-
-
     }
 
-    public void listGamesByNames(View view) {
-        Retrofit retrofit = new Retrofit.Builder().baseUrl(GameServiceInterface.BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
+    public void listGames(String name) {
+        showLoadingDialog();
+        final Call<GamePlatform> requestGames;
+        if (name == null || name.isEmpty()) {
+            requestGames = service.listGamesByPlatform(GameServiceInterface.MD_GAMES);
+        } else {
+            requestGames = service.listGamesByName(name);
 
-        GameServiceInterface service = retrofit.create(GameServiceInterface.class);
-        final Call<GamePlatform> requestGames = service.listGamesByName(0, 100, searchText.getText().toString());
+        }
         requestGames.enqueue(new Callback<GamePlatform>() {
             @Override
             public void onResponse(Call<GamePlatform> call, Response<GamePlatform> response) {
                 if (response.isSuccessful()) {
                     games.clear();
-                    games.addAll(response.body().getGames());
-                    adapter.notifyDataSetChanged();
-                } else {
-                    Snackbar.make(null, "Replace with your own action", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
+                    if (response.body().getGames() != null) {
+                        games.addAll(response.body().getGames());
+                        adapter.notifyDataSetChanged();
+                    }
                 }
+                dismissLoadingDialog();
             }
 
             @Override
             public void onFailure(Call<GamePlatform> call, Throwable t) {
-                Snackbar.make(null, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                dismissLoadingDialog();
             }
         });
     }
@@ -95,5 +110,21 @@ public class ListGamesActivity extends AppCompatActivity implements LoaderManage
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
+    }
+
+    private void showLoadingDialog() {
+        if (progressDialogLoading != null) {
+            progressDialogLoading.setMessage("loading");
+            progressDialogLoading.show();
+        } else {
+            progressDialogLoading = new ProgressDialog(this);
+            showLoadingDialog();
+        }
+    }
+
+    private void dismissLoadingDialog() {
+        if (progressDialogLoading != null && progressDialogLoading.isShowing()) {
+            progressDialogLoading.dismiss();
+        }
     }
 }

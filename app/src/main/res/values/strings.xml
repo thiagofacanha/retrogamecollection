@@ -3,4 +3,5 @@
     <string name="title_activity_list_games">ListGamesActivity</string>
     <string name="collection_manage">Collection Manage</string>
     <string name="exit">Exit</string>
+    <string name="title_activity_game_detail">GameDetailActivity</string>
 </resources>

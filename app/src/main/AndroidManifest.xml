@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="br.com.sandclan.retrocollection">
+
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:fullBackupContent="true"
@@ -20,13 +22,23 @@
         <activity
             android:name=".ui.ListGamesActivity"
             android:label="@string/title_activity_list_games"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <provider
-            android:name="br.com.sandclan.retrocollection.data.GameContentProvider"
+            android:name=".data.GameContentProvider"
             android:authorities="br.com.sandclan.retrocollection.data"
             android:exported="false"
             android:syncable="true" />
+
+        <activity
+            android:name=".ui.GameDetailActivity"
+            android:label="@string/title_activity_game_detail"
+            android:parentActivityName=".ui.ListGamesActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="br.com.sandclan.retrocollection.ui.ListGamesActivity" />
+        </activity>
     </application>
 
 </manifest>

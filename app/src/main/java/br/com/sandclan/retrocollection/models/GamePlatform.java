@@ -2,83 +2,21 @@
 package br.com.sandclan.retrocollection.models;
 
 import java.util.List;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
+import org.simpleframework.xml.Element;
+import org.simpleframework.xml.ElementList;
+import org.simpleframework.xml.Root;
+
+@Root(name = "Data", strict = false)
 public class GamePlatform {
 
-    @SerializedName("error")
-    @Expose
-    private String error;
-    @SerializedName("limit")
-    @Expose
-    private Integer limit;
-    @SerializedName("offset")
-    @Expose
-    private Integer offset;
-    @SerializedName("number_of_page_results")
-    @Expose
-    private Integer numberOfPageResults;
-    @SerializedName("number_of_total_results")
-    @Expose
-    private Integer numberOfTotalResults;
-    @SerializedName("status_code")
-    @Expose
-    private Integer statusCode;
-    @SerializedName("results")
-    @Expose
-    private List<Game> games = null;
-    @SerializedName("version")
-    @Expose
-    private String version;
 
-    public String getError() {
-        return error;
-    }
+    @Element(name = "baseImgUrl",required = false)
+    private String baseImgUrl;
 
-    public void setError(String error) {
-        this.error = error;
-    }
+    @ElementList(inline = true,name="Game",required = false)
+    private List<Game> games;
 
-    public Integer getLimit() {
-        return limit;
-    }
-
-    public void setLimit(Integer limit) {
-        this.limit = limit;
-    }
-
-    public Integer getOffset() {
-        return offset;
-    }
-
-    public void setOffset(Integer offset) {
-        this.offset = offset;
-    }
-
-    public Integer getNumberOfPageResults() {
-        return numberOfPageResults;
-    }
-
-    public void setNumberOfPageResults(Integer numberOfPageResults) {
-        this.numberOfPageResults = numberOfPageResults;
-    }
-
-    public Integer getNumberOfTotalResults() {
-        return numberOfTotalResults;
-    }
-
-    public void setNumberOfTotalResults(Integer numberOfTotalResults) {
-        this.numberOfTotalResults = numberOfTotalResults;
-    }
-
-    public Integer getStatusCode() {
-        return statusCode;
-    }
-
-    public void setStatusCode(Integer statusCode) {
-        this.statusCode = statusCode;
-    }
 
     public List<Game> getGames() {
         return games;
@@ -88,12 +26,11 @@ public class GamePlatform {
         this.games = games;
     }
 
-    public String getVersion() {
-        return version;
+    public String getBaseImgUrl() {
+        return baseImgUrl;
     }
 
-    public void setVersion(String version) {
-        this.version = version;
+    public void setBaseImgUrl(String baseImgUrl) {
+        this.baseImgUrl = baseImgUrl;
     }
-
 }

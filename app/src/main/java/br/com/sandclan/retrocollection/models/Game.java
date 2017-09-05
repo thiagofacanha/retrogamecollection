@@ -2,120 +2,92 @@
 package br.com.sandclan.retrocollection.models;
 
 import java.util.List;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
+import org.simpleframework.xml.Element;
+import org.simpleframework.xml.ElementList;
+import org.simpleframework.xml.Root;
+
+@Root(name = "Game", strict = false)
 public class Game {
 
-    @SerializedName("aliases")
-    @Expose
-    private String aliases;
-    @SerializedName("api_detail_url")
-    @Expose
-    private String apiDetailUrl;
-    @SerializedName("deck")
-    @Expose
-    private String deck;
-    @SerializedName("description")
-    @Expose
-    private String description;
-    @SerializedName("id")
-    @Expose
-    private Integer id;
-    @SerializedName("image")
-    @Expose
-    private Image image;
-    @SerializedName("name")
-    @Expose
-    private String name;
-    @SerializedName("original_game_rating")
-    @Expose
-    private List<OriginalGameRating> originalGameRating = null;
-    @SerializedName("original_release_date")
-    @Expose
-    private String originalReleaseDate;
-    @SerializedName("site_detail_url")
-    @Expose
-    private String siteDetailUrl;
+    @Element(name = "id",required = false)
+    private long id;
 
-    public String getAliases() {
-        return aliases;
-    }
+    @Element(name = "GameTitle",required = false)
+    private String gameTitle;
 
-    public void setAliases(String aliases) {
-        this.aliases = aliases;
-    }
+    @Element(name = "PlatformId",required = false)
+    private long platformId;
 
-    public String getApiDetailUrl() {
-        return apiDetailUrl;
-    }
+    @Element(name = "Platform",required = false)
+    private String platformName;
 
-    public void setApiDetailUrl(String apiDetailUrl) {
-        this.apiDetailUrl = apiDetailUrl;
-    }
+    @Element(name = "ReleaseDate",required = false)
+    private String releaseDate;
 
-    public String getDeck() {
-        return deck;
-    }
+    @Element(name = "Overview",required = false)
+    private String overview;
 
-    public void setDeck(String deck) {
-        this.deck = deck;
-    }
+    @ElementList(inline = true,name="Images",required = false)
+    private List<Image> images;
 
-    public String getDescription() {
-        return description;
-    }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
-    public Integer getId() {
+
+    public long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public Image getImage() {
-        return image;
+    public String getGameTitle() {
+        return gameTitle;
     }
 
-    public void setImage(Image image) {
-        this.image = image;
+    public void setGameTitle(String gameTitle) {
+        this.gameTitle = gameTitle;
     }
 
-    public String getName() {
-        return name;
+    public long getPlatformId() {
+        return platformId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setPlatformId(long platformId) {
+        this.platformId = platformId;
     }
 
-    public List<OriginalGameRating> getOriginalGameRating() {
-        return originalGameRating;
+    public String getPlatformName() {
+        return platformName;
     }
 
-    public void setOriginalGameRating(List<OriginalGameRating> originalGameRating) {
-        this.originalGameRating = originalGameRating;
+    public void setPlatformName(String platformName) {
+        this.platformName = platformName;
     }
 
-    public String getOriginalReleaseDate() {
-        return originalReleaseDate;
+    public String getReleaseDate() {
+        return releaseDate;
     }
 
-    public void setOriginalReleaseDate(String originalReleaseDate) {
-        this.originalReleaseDate = originalReleaseDate;
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
     }
 
-    public String getSiteDetailUrl() {
-        return siteDetailUrl;
+    public String getOverview() {
+        return overview;
     }
 
-    public void setSiteDetailUrl(String siteDetailUrl) {
-        this.siteDetailUrl = siteDetailUrl;
+    public void setOverview(String overview) {
+        this.overview = overview;
     }
 
+
+    public List<Image> getImages() {
+        return images;
+    }
+
+    public void setImages(List<Image> images) {
+        this.images = images;
+    }
 }

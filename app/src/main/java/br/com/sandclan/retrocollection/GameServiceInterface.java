@@ -1,5 +1,6 @@
 package br.com.sandclan.retrocollection;
 
+import br.com.sandclan.retrocollection.models.Game;
 import br.com.sandclan.retrocollection.models.GamePlatform;
 import retrofit2.Call;
 import retrofit2.http.FormUrlEncoded;
@@ -7,17 +8,21 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface GameServiceInterface {
+    public static final int GENESIS_ID = 18;
+    public static final int MD_GAMES = 36;
+    public static final String THEGAMEDB_BASE_URL = "http://thegamesdb.net/api/";
+    public static final String THEGAMEDB_GET_GAMES_FROM_PLATFORM= "GetPlatformGames.php";
+    public static final String THEGAMEDB_GET_GAMES_FROM_GENESIS = "GetGame.php?platform=Sega%20Genesis";
+    public static final String THEGAMEDB_GET_GAME_FROM_GENESIS_BY_ID = "GetGame.php?platform=Sega%20Genesis";
 
-    public static final String BASE_URL = "https://www.giantbomb.com/api/";
-    public static final String GENESIS_ID = "6";
-    public static final String GET_GAMES_FROM_GENESIS = "games?api_key=YOURAPI&platforms="+ GENESIS_ID + "&format=json&sort=name";
-    public static final String GET_GAMES_FROM_GENESIS_BY_NAME = "games?api_key=YOURAPI&platforms="+ GENESIS_ID + "&format=json&sort=name";
 
-    @GET(value = GET_GAMES_FROM_GENESIS)
-    Call<GamePlatform> listGames(@Query("offset") int offset,@Query("limit") int limit);
+    @GET(value = THEGAMEDB_GET_GAMES_FROM_PLATFORM)
+    Call<GamePlatform> listGamesByPlatform(@Query("platform") int platform);
 
-    @GET(value = GET_GAMES_FROM_GENESIS_BY_NAME)
-    Call<GamePlatform> listGamesByName(@Query("offset") int offset,@Query("limit") int limit,@Query(value = "filter=name:", encoded = true)  String name);
+    @GET(value = THEGAMEDB_GET_GAMES_FROM_GENESIS)
+    Call<GamePlatform> listGamesByName(@Query("name") String name);
 
+    @GET(value = THEGAMEDB_GET_GAMES_FROM_GENESIS)
+    Call<GamePlatform> getGameById(@Query("id") long id);
 
 }
