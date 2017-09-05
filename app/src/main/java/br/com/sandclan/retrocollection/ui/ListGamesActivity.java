@@ -58,7 +58,6 @@ public class ListGamesActivity extends AppCompatActivity implements LoaderManage
 
         retrofit = new Retrofit.Builder().baseUrl(GameServiceInterface.THEGAMEDB_BASE_URL).addConverterFactory(SimpleXmlConverterFactory.create()).build();
         service = retrofit.create(GameServiceInterface.class);
-        listGames(searchText.getText().toString() + "Shining");
 
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override

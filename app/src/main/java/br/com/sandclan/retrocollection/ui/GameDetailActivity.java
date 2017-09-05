@@ -72,8 +72,8 @@ public class GameDetailActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     game = response.body().getGames().get(0);
                     if (game != null) {
-                        ((TextView) findViewById(R.id.gameTitle)).setText(game.getGameTitle());
-                        Glide.with(GameDetailActivity.this).load(response.body().getBaseImgUrl() + game.getImages().get(0).getClearLogo()).into(logo);
+                        ((TextView) findViewById(R.id.overview)).setText(game.getOverview());
+                        Glide.with(GameDetailActivity.this).load(response.body().getBaseImgUrl() + game.getImages().get(0).getBoxart().get("front")).into(logo);
                     }
                 }
                 dismissLoadingDialog();
