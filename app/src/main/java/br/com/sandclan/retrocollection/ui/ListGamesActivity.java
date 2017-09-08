@@ -16,9 +16,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.XMLFormatter;
 
 import br.com.sandclan.retrocollection.GameServiceInterface;
@@ -26,11 +30,14 @@ import br.com.sandclan.retrocollection.R;
 import br.com.sandclan.retrocollection.adapter.GameAdapter;
 import br.com.sandclan.retrocollection.models.Game;
 import br.com.sandclan.retrocollection.models.GamePlatform;
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.SimpleXmlConverterFactory;
+
+import static br.com.sandclan.retrocollection.GameServiceInterface.httpTimeoutClient;
 
 
 public class ListGamesActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -51,12 +58,13 @@ public class ListGamesActivity extends AppCompatActivity implements LoaderManage
 
         searchText = (EditText) findViewById(R.id.searchText);
         searchButton = (Button) findViewById(R.id.searchButton);
-         final RecyclerView gameListRecycleView = (RecyclerView) findViewById(R.id.gameRecycleView);
+        final RecyclerView gameListRecycleView = (RecyclerView) findViewById(R.id.gameRecycleView);
         adapter = new GameAdapter(ListGamesActivity.this, games);
         gameListRecycleView.setAdapter(adapter);
         gameListRecycleView.setLayoutManager(new LinearLayoutManager(this));
 
-        retrofit = new Retrofit.Builder().baseUrl(GameServiceInterface.THEGAMEDB_BASE_URL).addConverterFactory(SimpleXmlConverterFactory.create()).build();
+        retrofit = new Retrofit.Builder().client(httpTimeoutClient).baseUrl(GameServiceInterface.THEGAMEDB_BASE_URL).addConverterFactory(SimpleXmlConverterFactory.create()).build();
+
         service = retrofit.create(GameServiceInterface.class);
 
         searchButton.setOnClickListener(new View.OnClickListener() {
@@ -91,6 +99,8 @@ public class ListGamesActivity extends AppCompatActivity implements LoaderManage
 
             @Override
             public void onFailure(Call<GamePlatform> call, Throwable t) {
+                if (t instanceof SocketTimeoutException)
+                    Toast.makeText(ListGamesActivity.this, R.string.timeout_error, Toast.LENGTH_SHORT).show();
                 dismissLoadingDialog();
             }
         });

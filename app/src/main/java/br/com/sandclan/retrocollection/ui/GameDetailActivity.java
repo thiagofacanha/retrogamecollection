@@ -9,8 +9,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+
+import java.net.SocketTimeoutException;
 
 import br.com.sandclan.retrocollection.GameServiceInterface;
 import br.com.sandclan.retrocollection.R;
@@ -22,6 +25,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.SimpleXmlConverterFactory;
+
+import static br.com.sandclan.retrocollection.GameServiceInterface.httpTimeoutClient;
 
 public class GameDetailActivity extends AppCompatActivity {
     private Game game;
@@ -59,7 +64,7 @@ public class GameDetailActivity extends AppCompatActivity {
     }
 
     private void setGameByID(final long gameID) {
-        retrofit = new Retrofit.Builder().baseUrl(GameServiceInterface.THEGAMEDB_BASE_URL).addConverterFactory(SimpleXmlConverterFactory.create()).build();
+        retrofit = new Retrofit.Builder().client(httpTimeoutClient).baseUrl(GameServiceInterface.THEGAMEDB_BASE_URL).addConverterFactory(SimpleXmlConverterFactory.create()).build();
         service = retrofit.create(GameServiceInterface.class);
         showLoadingDialog();
         final Call<GamePlatform> gameRequest = service.getGameById(gameID);
@@ -81,6 +86,9 @@ public class GameDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<GamePlatform> call, Throwable t) {
+                if (t instanceof SocketTimeoutException) {
+                    Toast.makeText(GameDetailActivity.this, R.string.timeout_error, Toast.LENGTH_SHORT).show();
+                }
                 dismissLoadingDialog();
             }
         });
