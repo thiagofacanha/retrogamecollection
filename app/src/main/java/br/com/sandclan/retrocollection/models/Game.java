@@ -1,6 +1,7 @@
 
 package br.com.sandclan.retrocollection.models;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.simpleframework.xml.Element;
@@ -8,7 +9,7 @@ import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 
 @Root(name = "Game", strict = false)
-public class Game {
+public class Game implements Serializable{
 
     @Element(name = "id",required = false)
     private long id;
@@ -31,6 +32,7 @@ public class Game {
     @ElementList(inline = true,name="Images",required = false)
     private List<Image> images;
 
+    private boolean favourite;
 
 
 
@@ -89,5 +91,14 @@ public class Game {
 
     public void setImages(List<Image> images) {
         this.images = images;
+    }
+
+
+    public boolean isFavourite() {
+        return favourite;
+    }
+
+    public void setFavourite(boolean favourite) {
+        this.favourite = favourite;
     }
 }

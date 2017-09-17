@@ -3,34 +3,28 @@ package br.com.sandclan.retrocollection.ui;
 import android.app.ProgressDialog;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.logging.XMLFormatter;
 
 import br.com.sandclan.retrocollection.GameServiceInterface;
 import br.com.sandclan.retrocollection.R;
 import br.com.sandclan.retrocollection.adapter.GameAdapter;
+import br.com.sandclan.retrocollection.data.GameContract;
 import br.com.sandclan.retrocollection.models.Game;
 import br.com.sandclan.retrocollection.models.GamePlatform;
-import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,6 +32,7 @@ import retrofit2.Retrofit;
 import retrofit2.SimpleXmlConverterFactory;
 
 import static br.com.sandclan.retrocollection.GameServiceInterface.httpTimeoutClient;
+import static br.com.sandclan.retrocollection.data.GameContentProvider.sGameSelectionByID;
 
 
 public class ListGamesActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -59,14 +54,14 @@ public class ListGamesActivity extends AppCompatActivity implements LoaderManage
         searchText = (EditText) findViewById(R.id.searchText);
         searchButton = (Button) findViewById(R.id.searchButton);
         final RecyclerView gameListRecycleView = (RecyclerView) findViewById(R.id.gameRecycleView);
+        DividerItemDecoration divider = new DividerItemDecoration(
+                gameListRecycleView.getContext(),
+                DividerItemDecoration.VERTICAL
+        );
+        gameListRecycleView.addItemDecoration(divider);
         adapter = new GameAdapter(ListGamesActivity.this, games);
         gameListRecycleView.setAdapter(adapter);
         gameListRecycleView.setLayoutManager(new LinearLayoutManager(this));
-
-        retrofit = new Retrofit.Builder().client(httpTimeoutClient).baseUrl(GameServiceInterface.THEGAMEDB_BASE_URL).addConverterFactory(SimpleXmlConverterFactory.create()).build();
-
-        service = retrofit.create(GameServiceInterface.class);
-
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,6 +71,9 @@ public class ListGamesActivity extends AppCompatActivity implements LoaderManage
     }
 
     public void listGames(String name) {
+        retrofit = new Retrofit.Builder().client(httpTimeoutClient).baseUrl(GameServiceInterface.THEGAMEDB_BASE_URL).addConverterFactory(SimpleXmlConverterFactory.create()).build();
+
+        service = retrofit.create(GameServiceInterface.class);
         showLoadingDialog();
         final Call<GamePlatform> requestGames;
         if (name == null || name.isEmpty()) {
@@ -93,18 +91,92 @@ public class ListGamesActivity extends AppCompatActivity implements LoaderManage
                         games.addAll(response.body().getGames());
                         adapter.notifyDataSetChanged();
                     }
+                } else if (response.code() == 503) {
+                    Toast.makeText(ListGamesActivity.this, "Service Unavailable. Try again later.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(ListGamesActivity.this, "Error accessing server. Try again later.", Toast.LENGTH_SHORT).show();
+
+                }
+                dismissLoadingDialog();
+                setAllGameDetails(games);
+            }
+
+            @Override
+            public void onFailure(Call<GamePlatform> call, Throwable t) {
+                if (t instanceof SocketTimeoutException) {
+                    Toast.makeText(ListGamesActivity.this, R.string.timeout_error, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(ListGamesActivity.this, "Error accessing server. Try again later.", Toast.LENGTH_SHORT).show();
+
+                }
+                dismissLoadingDialog();
+            }
+        });
+    }
+
+    private void setAllGameDetails(List<Game> games) {
+        for (Game game : games) {
+            getGameDetail(game.getId());
+        }
+
+    }
+
+    private void setGameDetail(Game game) {
+        Cursor checkExistenceCursor = getContentResolver().query(GameContract.GameEntry.CONTENT_URI,
+                null,
+                null,
+                null,
+                null
+        );
+        List<Long> alreadSavedList = new ArrayList<>();
+        if (checkExistenceCursor != null) {
+            while (checkExistenceCursor.moveToNext()) {
+                alreadSavedList.add(checkExistenceCursor.getLong(checkExistenceCursor.getColumnIndex(GameContract.GameEntry._ID)));
+            }
+        }
+        checkExistenceCursor.close();
+        for (Game tempGame : games) {
+            if (tempGame.getId() == (game.getId())) {
+                tempGame.setImages(game.getImages());
+                tempGame.setOverview(game.getOverview());
+                tempGame.setFavourite(alreadSavedList.contains(tempGame.getId()));
+            }
+        }
+        adapter.notifyDataSetChanged();
+    }
+
+
+    public void getGameDetail(long gameID) {
+        retrofit = new Retrofit.Builder().client(httpTimeoutClient).baseUrl(GameServiceInterface.THEGAMEDB_BASE_URL).addConverterFactory(SimpleXmlConverterFactory.create()).build();
+        service = retrofit.create(GameServiceInterface.class);
+        showLoadingDialog();
+        final Call<GamePlatform> gameRequest = service.getGameById(gameID);
+
+        gameRequest.enqueue(new Callback<GamePlatform>() {
+
+
+            @Override
+            public void onResponse(Call<GamePlatform> call, Response<GamePlatform> response) {
+                if (response.isSuccessful()) {
+                    Game game = response.body().getGames().get(0);
+                    if (game != null) {
+                        setGameDetail(game);
+                    }
                 }
                 dismissLoadingDialog();
             }
 
             @Override
             public void onFailure(Call<GamePlatform> call, Throwable t) {
-                if (t instanceof SocketTimeoutException)
+                if (t instanceof SocketTimeoutException) {
                     Toast.makeText(ListGamesActivity.this, R.string.timeout_error, Toast.LENGTH_SHORT).show();
+                }
                 dismissLoadingDialog();
             }
         });
+
     }
+
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {

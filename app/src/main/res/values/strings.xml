@@ -5,4 +5,6 @@
     <string name="exit">Exit</string>
     <string name="title_activity_game_detail">GameDetailActivity</string>
     <string name="timeout_error">Timeout while accessing server</string>
+    <string name="search">Search</string>
+    <string name="game_name">Game name</string>
 </resources>

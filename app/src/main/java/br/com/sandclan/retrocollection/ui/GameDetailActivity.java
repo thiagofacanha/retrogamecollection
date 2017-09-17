@@ -26,6 +26,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.SimpleXmlConverterFactory;
 
+import static br.com.sandclan.retrocollection.GameServiceInterface.THEGAMEDB_BASE_IMAGE_URL;
 import static br.com.sandclan.retrocollection.GameServiceInterface.httpTimeoutClient;
 
 public class GameDetailActivity extends AppCompatActivity {
@@ -57,59 +58,13 @@ public class GameDetailActivity extends AppCompatActivity {
 
 
         if (extras != null) {
-            setGameByID(extras.getLong("gameId"));
+            game = (Game) extras.getSerializable("gameExtra");
         }
         logo = (ImageView) findViewById(R.id.gameFrontCover);
+        ((TextView) findViewById(R.id.overview)).setText(game.getOverview());
+        Glide.with(GameDetailActivity.this).load(THEGAMEDB_BASE_IMAGE_URL.concat(game.getImages().get(0).getBoxart().get("front"))).into(logo);
 
     }
 
-    private void setGameByID(final long gameID) {
-        retrofit = new Retrofit.Builder().client(httpTimeoutClient).baseUrl(GameServiceInterface.THEGAMEDB_BASE_URL).addConverterFactory(SimpleXmlConverterFactory.create()).build();
-        service = retrofit.create(GameServiceInterface.class);
-        showLoadingDialog();
-        final Call<GamePlatform> gameRequest = service.getGameById(gameID);
-
-        gameRequest.enqueue(new Callback<GamePlatform>() {
-
-
-            @Override
-            public void onResponse(Call<GamePlatform> call, Response<GamePlatform> response) {
-                if (response.isSuccessful()) {
-                    game = response.body().getGames().get(0);
-                    if (game != null) {
-                        ((TextView) findViewById(R.id.overview)).setText(game.getOverview());
-                        Glide.with(GameDetailActivity.this).load(response.body().getBaseImgUrl() + game.getImages().get(0).getBoxart().get("front")).into(logo);
-                    }
-                }
-                dismissLoadingDialog();
-            }
-
-            @Override
-            public void onFailure(Call<GamePlatform> call, Throwable t) {
-                if (t instanceof SocketTimeoutException) {
-                    Toast.makeText(GameDetailActivity.this, R.string.timeout_error, Toast.LENGTH_SHORT).show();
-                }
-                dismissLoadingDialog();
-            }
-        });
-
-    }
-
-
-    private void showLoadingDialog() {
-        if (progressDialogLoading != null) {
-            progressDialogLoading.setMessage("loading");
-            progressDialogLoading.show();
-        } else {
-            progressDialogLoading = new ProgressDialog(this);
-            showLoadingDialog();
-        }
-    }
-
-    private void dismissLoadingDialog() {
-        if (progressDialogLoading != null && progressDialogLoading.isShowing()) {
-            progressDialogLoading.dismiss();
-        }
-    }
 
 }

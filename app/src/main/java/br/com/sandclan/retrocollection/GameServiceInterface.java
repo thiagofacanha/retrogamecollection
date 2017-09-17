@@ -11,13 +11,14 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface GameServiceInterface {
-    public static final int GENESIS_ID = 18;
-    public static final int MD_GAMES = 36;
-    public static final String THEGAMEDB_BASE_URL = "http://thegamesdb.net/api/";
-    public static final String THEGAMEDB_GET_GAMES_FROM_PLATFORM= "GetPlatformGames.php";
-    public static final String THEGAMEDB_GET_GAMES_FROM_GENESIS = "GetGame.php?platform=Sega%20Genesis";
-    public static final String THEGAMEDB_GET_GAME_FROM_GENESIS_BY_ID = "GetGame.php?platform=Sega%20Genesis";
-    public static OkHttpClient httpTimeoutClient = new OkHttpClient.Builder()
+    int GENESIS_ID = 18;
+    int MD_GAMES = 36;
+    String THEGAMEDB_BASE_IMAGE_URL = "http://thegamesdb.net/banners/";
+    String THEGAMEDB_BASE_URL = "http://thegamesdb.net/api/";
+    String THEGAMEDB_GET_GAMES_FROM_PLATFORM= "GetPlatformGames.php";
+    String THEGAMEDB_GET_GAMES_FROM_GENESIS = "GetGame.php?platform=Sega%20Genesis";
+    String THEGAMEDB_GET_GAME_FROM_GENESIS_BY_ID = "GetGame.php?platform=Sega%20Genesis";
+    OkHttpClient httpTimeoutClient = new OkHttpClient.Builder()
             .readTimeout(30, TimeUnit.SECONDS)
             .connectTimeout(30, TimeUnit.SECONDS)
             .build();

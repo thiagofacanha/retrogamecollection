@@ -22,6 +22,9 @@
         <activity
             android:name=".ui.ListGamesActivity"
             android:label="@string/title_activity_list_games"
+            android:windowSoftInputMode="stateHidden"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <provider
@@ -33,6 +36,7 @@
         <activity
             android:name=".ui.GameDetailActivity"
             android:label="@string/title_activity_game_detail"
+            android:screenOrientation="portrait"
             android:parentActivityName=".ui.ListGamesActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data

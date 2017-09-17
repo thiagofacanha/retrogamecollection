@@ -17,31 +17,36 @@ public class GameContentProvider extends ContentProvider {
     private GameDBHelper mOpenHelper;
     private static final int GAME = 100;
     public static final String AUTHORITY = "br.com.sandclan.retrocollection.data";
-    private static final SQLiteQueryBuilder sGameQueryBuilder = new SQLiteQueryBuilder();
-    private static final String sGameSelectionByID =
+    public static final String sGameSelectionByID =
             GameContract.GameEntry.TABLE_NAME +
                     "." + GameContract.GameEntry._ID + " = ? ";
 
 
-    private Cursor getGameByID(Uri uri, String[] projection, String sortOrder) {
-        String gameId = GameContract.GameEntry.getIdFromGame(uri);
+    public Cursor getGameByID(long id) {
 
         String[] selectionArgs;
         String selection;
 
         selection = sGameSelectionByID;
-        selectionArgs = new String[]{gameId};
+        selectionArgs = new String[]{String.valueOf(id)};
 
-        return sGameQueryBuilder.query(mOpenHelper.getReadableDatabase(),
-                projection,
+        return query(GameContract.GameEntry.CONTENT_URI,
+                null,
                 selection,
                 selectionArgs,
-                null,
-                null,
-                sortOrder
+                null
         );
     }
-
+    public int deleteGameById(long id) {
+        String[] selectionArgs;
+        String selection;
+        selection = sGameSelectionByID;
+        selectionArgs = new String[]{String.valueOf(id)};
+        return delete(GameContract.GameEntry.CONTENT_URI,
+                selection,
+                selectionArgs
+        );
+    }
 
     @Override
     public boolean onCreate() {
@@ -98,6 +103,12 @@ public class GameContentProvider extends ContentProvider {
 
         switch (match) {
             case GAME: {
+                Cursor gameQuery = getGameByID((long)values.get(GameContract.GameEntry._ID));
+                if(gameQuery.moveToFirst()){
+                    returnUri = GameContract.GameEntry.buildGameByID((long)values.get(GameContract.GameEntry._ID));
+                    break;
+                }
+                gameQuery.close();
                 long _id = db.insert(GameContract.GameEntry.TABLE_NAME, null, values);
                 if (_id > 0)
                     returnUri = GameContract.GameEntry.buildGameByID(_id);

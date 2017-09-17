@@ -7,12 +7,13 @@ import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.ElementMap;
 import org.simpleframework.xml.Root;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
 
 @Root(name = "Images", strict = false)
-public class Image {
+public class Image implements Serializable{
 
 
     @Element(name = "clearlogo", required = false)
@@ -23,7 +24,7 @@ public class Image {
     private String screenshot;
 
 
-    @ElementMap(entry = "boxart", key = "side", attribute = true, inline = true, required = false)
+    @ElementMap(entry = "boxart", key = "side",value = "thumb", attribute = true, inline = true, required = false)
     private Map<String, String> boxart;
 
 
