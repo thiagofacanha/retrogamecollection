@@ -1,11 +1,13 @@
 package br.com.sandclan.retrocollection.ui;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,9 +19,12 @@ import android.widget.Toast;
 
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import br.com.sandclan.retrocollection.GameServiceInterface;
+import br.com.sandclan.retrocollection.Listener.InterceptorTouchListener;
 import br.com.sandclan.retrocollection.R;
 import br.com.sandclan.retrocollection.adapter.GameAdapter;
 import br.com.sandclan.retrocollection.data.GameContract;
@@ -32,7 +37,6 @@ import retrofit2.Retrofit;
 import retrofit2.SimpleXmlConverterFactory;
 
 import static br.com.sandclan.retrocollection.GameServiceInterface.httpTimeoutClient;
-import static br.com.sandclan.retrocollection.data.GameContentProvider.sGameSelectionByID;
 
 
 public class ListGamesActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -43,6 +47,7 @@ public class ListGamesActivity extends AppCompatActivity implements LoaderManage
     private GameServiceInterface service;
     private ProgressDialog progressDialogLoading;
     private Button searchButton;
+    private RecyclerView gameListRecycleView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,24 +55,41 @@ public class ListGamesActivity extends AppCompatActivity implements LoaderManage
         setContentView(R.layout.activity_list_games);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         searchText = (EditText) findViewById(R.id.searchText);
+        listGames(searchText.getText().toString());
         searchButton = (Button) findViewById(R.id.searchButton);
-        final RecyclerView gameListRecycleView = (RecyclerView) findViewById(R.id.gameRecycleView);
+        gameListRecycleView = (RecyclerView) findViewById(R.id.gameRecycleView);
         DividerItemDecoration divider = new DividerItemDecoration(
                 gameListRecycleView.getContext(),
                 DividerItemDecoration.VERTICAL
         );
         gameListRecycleView.addItemDecoration(divider);
         adapter = new GameAdapter(ListGamesActivity.this, games);
+        gameListRecycleView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        gameListRecycleView.setItemAnimator(new DefaultItemAnimator());
+
         gameListRecycleView.setAdapter(adapter);
-        gameListRecycleView.setLayoutManager(new LinearLayoutManager(this));
+        gameListRecycleView.addOnItemTouchListener(new InterceptorTouchListener(getApplicationContext(), new InterceptorTouchListener.ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                if (position >= 0) {
+                    Game game = games.get(position);
+                    openGameDetailActivity(game);
+                }
+            }
+        }));
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 listGames(searchText.getText().toString());
             }
         });
+    }
+
+    private void openGameDetailActivity(Game gameExtra) {
+        Intent gameDetailIntent = new Intent(this, GameDetailActivity.class);
+        gameDetailIntent.putExtra("gameExtra", gameExtra);
+        this.startActivity(gameDetailIntent);
     }
 
     public void listGames(String name) {
@@ -98,6 +120,12 @@ public class ListGamesActivity extends AppCompatActivity implements LoaderManage
 
                 }
                 dismissLoadingDialog();
+                Collections.sort(games, new Comparator<Game>() {
+                    @Override
+                    public int compare(final Game gameLeft, final Game gameRight) {
+                        return gameLeft.getGameTitle().compareTo(gameRight.getGameTitle());
+                    }
+                });
                 setAllGameDetails(games);
             }
 
