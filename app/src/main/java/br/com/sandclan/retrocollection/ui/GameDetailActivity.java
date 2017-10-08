@@ -9,25 +9,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-
-import java.net.SocketTimeoutException;
 
 import br.com.sandclan.retrocollection.GameServiceInterface;
 import br.com.sandclan.retrocollection.R;
 import br.com.sandclan.retrocollection.models.Game;
-import br.com.sandclan.retrocollection.models.GamePlatform;
-import br.com.sandclan.retrocollection.models.Image;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.SimpleXmlConverterFactory;
 
 import static br.com.sandclan.retrocollection.GameServiceInterface.THEGAMEDB_BASE_IMAGE_URL;
-import static br.com.sandclan.retrocollection.GameServiceInterface.httpTimeoutClient;
 
 public class GameDetailActivity extends AppCompatActivity {
     private Game game;
@@ -59,10 +49,14 @@ public class GameDetailActivity extends AppCompatActivity {
 
         if (extras != null) {
             game = (Game) extras.getSerializable("gameExtra");
+        }else{
+            finish();
         }
         logo = (ImageView) findViewById(R.id.gameFrontCover);
         ((TextView) findViewById(R.id.overview)).setText(game.getOverview());
-        Glide.with(GameDetailActivity.this).load(THEGAMEDB_BASE_IMAGE_URL.concat(game.getImages().get(0).getBoxart().get("front"))).into(logo);
+        if (game.getImages() != null) {
+            Glide.with(GameDetailActivity.this).load(THEGAMEDB_BASE_IMAGE_URL.concat(game.getImages().get(0).getBoxart().get("front"))).into(logo);
+        }
 
     }
 

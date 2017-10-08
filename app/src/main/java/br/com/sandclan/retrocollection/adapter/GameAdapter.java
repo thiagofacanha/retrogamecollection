@@ -1,59 +1,71 @@
 package br.com.sandclan.retrocollection.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import br.com.sandclan.retrocollection.R;
+import br.com.sandclan.retrocollection.data.GameContract;
 import br.com.sandclan.retrocollection.models.Game;
 import br.com.sandclan.retrocollection.models.Image;
+import br.com.sandclan.retrocollection.ui.GameDetailActivity;
 
 import static br.com.sandclan.retrocollection.GameServiceInterface.THEGAMEDB_BASE_IMAGE_URL;
+import static br.com.sandclan.retrocollection.data.GameContentProvider.getGameFromCursor;
+import static br.com.sandclan.retrocollection.data.GameContract.GameEntry.COLUMN_COVER_FRONT;
+import static br.com.sandclan.retrocollection.data.GameContract.GameEntry.COLUMN_DESCRIPTION;
+import static br.com.sandclan.retrocollection.data.GameContract.GameEntry.COLUMN_GAME_TITLE;
 
-public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder> {
-    private List<Game> games;
+public class GameAdapter extends RecyclerViewCursorAdapter<GameAdapter.GameViewHolder> implements View.OnClickListener {
     private Context context;
+    private OnItemClickListener onItemClickListener;
 
-    public GameAdapter(Context context, List<Game> games) {
+    public GameAdapter(Context context) {
+        super();
         this.context = context;
-        this.games = games;
-
     }
-
 
     @Override
     public GameViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         ViewGroup itemLayout = (ViewGroup) LayoutInflater.from(parent.getContext()).inflate(
                 R.layout.game_list_item, parent, false);
+        itemLayout.setOnClickListener(this);
         return new GameViewHolder(itemLayout);
     }
 
     @Override
-    public void onBindViewHolder(GameViewHolder holder, final int position) {
-        Game gameItem = games.get(position);
-        holder.gameTitle.setText(gameItem.getGameTitle());
-        List<Image> gameCoverImage = gameItem.getImages();
-        if (gameCoverImage != null && gameCoverImage.get(0) != null) {
-            Glide.with(context).load(THEGAMEDB_BASE_IMAGE_URL.concat(gameCoverImage.get(0).getBoxart().get("front"))).into(holder.gameFrontCover);
-        }
+    public void onBindViewHolder(GameViewHolder holder, final Cursor cursor) {
+        holder.bindData(cursor);
 
     }
 
-
     @Override
-    public int getItemCount() {
-        return games.size();
+    public void onClick(View v) {
+        final RecyclerView recyclerView = (RecyclerView) v.getParent();
+        final int position = recyclerView.getChildLayoutPosition(v);
+        if (position != RecyclerView.NO_POSITION) {
+            final Cursor cursor = this.getItem(position);
+            Game game = getGameFromCursor(cursor);
+            openGameDetailActivity(game);
+        }
+    }
+
+    public void setOnItemClickListener(final OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
     }
 
     public class GameViewHolder extends RecyclerView.ViewHolder {
@@ -68,5 +80,25 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
             mainLayout = (RelativeLayout) view.findViewById(R.id.mainLayout);
 
         }
+
+        public void bindData(final Cursor cursor) {
+            gameTitle.setText(cursor.getString(cursor.getColumnIndex(COLUMN_GAME_TITLE)));
+            Glide.with(context).load(THEGAMEDB_BASE_IMAGE_URL.concat(cursor.getString(cursor.getColumnIndex(COLUMN_COVER_FRONT)))).into(gameFrontCover);
+
+        }
+
+
     }
+
+    public interface OnItemClickListener {
+        void onItemClicked(Cursor cursor);
+    }
+
+    private void openGameDetailActivity(Game gameExtra) {
+        Intent gameDetailIntent = new Intent(context, GameDetailActivity.class);
+        gameDetailIntent.putExtra("gameExtra", gameExtra);
+        context.startActivity(gameDetailIntent);
+    }
+
+
 }

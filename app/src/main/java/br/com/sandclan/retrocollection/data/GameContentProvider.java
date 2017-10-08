@@ -11,6 +11,13 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import br.com.sandclan.retrocollection.models.Game;
+import br.com.sandclan.retrocollection.models.Image;
+
 public class GameContentProvider extends ContentProvider {
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
@@ -37,6 +44,8 @@ public class GameContentProvider extends ContentProvider {
                 null
         );
     }
+
+
     public int deleteGameById(long id) {
         String[] selectionArgs;
         String selection;
@@ -94,6 +103,34 @@ public class GameContentProvider extends ContentProvider {
         }
     }
 
+    @Override
+    public int bulkInsert(Uri uri, ContentValues[] values) {
+        final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        final int match = sUriMatcher.match(uri);
+        int returnCount = 0;
+        switch (match) {
+            case GAME:
+                db.beginTransaction();
+                try {
+                    for (ContentValues value : values) {
+                        long _id = db.insert(GameContract.GameEntry.TABLE_NAME, null, value);
+                        if (_id != -1) {
+                            returnCount++;
+                        }
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+                getContext().getContentResolver().notifyChange(uri, null);
+                return returnCount;
+
+
+            default:
+                return super.bulkInsert(uri, values);
+        }
+    }
+
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
@@ -103,9 +140,9 @@ public class GameContentProvider extends ContentProvider {
 
         switch (match) {
             case GAME: {
-                Cursor gameQuery = getGameByID((long)values.get(GameContract.GameEntry._ID));
-                if(gameQuery.moveToFirst()){
-                    returnUri = GameContract.GameEntry.buildGameByID((long)values.get(GameContract.GameEntry._ID));
+                Cursor gameQuery = getGameByID((long) values.get(GameContract.GameEntry._ID));
+                if (gameQuery.moveToFirst()) {
+                    returnUri = GameContract.GameEntry.buildGameByID((long) values.get(GameContract.GameEntry._ID));
                     break;
                 }
                 gameQuery.close();
@@ -172,5 +209,20 @@ public class GameContentProvider extends ContentProvider {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         matcher.addURI(GameContentProvider.AUTHORITY, GameContract.PATH_GAME, GAME);
         return matcher;
+    }
+
+    public static Game getGameFromCursor(Cursor data) {
+        Game game = new Game();
+        List<Image> images = new ArrayList<>();
+        HashMap<String, String> frontCoverHash = new HashMap<>();
+        frontCoverHash.put("front", data.getString(data.getColumnIndex(GameContract.GameEntry.COLUMN_COVER_FRONT)));
+        Image frontCover = new Image();
+        frontCover.setBoxart(frontCoverHash);
+        images.add(frontCover);
+        game.setId(data.getInt(data.getColumnIndex(GameContract.GameEntry._ID)));
+        game.setGameTitle(data.getString(data.getColumnIndex(GameContract.GameEntry.COLUMN_GAME_TITLE)));
+        game.setOverview(data.getString(data.getColumnIndex(GameContract.GameEntry.COLUMN_DESCRIPTION)));
+        game.setImages(images);
+        return game;
     }
 }

@@ -1,5 +1,6 @@
 package br.com.sandclan.retrocollection.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -20,7 +21,7 @@ public class MainMenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
-
+        updateWidgets(this);
         findViewById(R.id.buttonManageCollection).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -35,5 +36,12 @@ public class MainMenuActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+
+    private static void updateWidgets(Context context) {
+                       Intent dataUpdatedIntent = new Intent("android.appwidget.action.APPWIDGET_UPDATE")
+                                .setPackage(context.getPackageName());
+               context.sendBroadcast(dataUpdatedIntent);
     }
 }

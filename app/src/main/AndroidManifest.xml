@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
@@ -22,10 +23,10 @@
         <activity
             android:name=".ui.ListGamesActivity"
             android:label="@string/title_activity_list_games"
-            android:windowSoftInputMode="stateHidden"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden" />
 
         <provider
             android:name=".data.GameContentProvider"
@@ -36,13 +37,28 @@
         <activity
             android:name=".ui.GameDetailActivity"
             android:label="@string/title_activity_game_detail"
-            android:screenOrientation="portrait"
             android:parentActivityName=".ui.ListGamesActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="br.com.sandclan.retrocollection.ui.ListGamesActivity" />
         </activity>
+
+        <receiver android:name=".widget.WidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info" />
+        </receiver>
+        <receiver android:name=".widget.WidgetAlarm"/>
+
+        <service
+            android:name=".widget.WidgetService"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
     </application>
 
 </manifest>
