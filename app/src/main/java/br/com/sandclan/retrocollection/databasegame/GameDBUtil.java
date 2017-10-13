@@ -64,6 +64,7 @@ public class GameDBUtil {
                         setAllGameDetails(games);
                     }
                     prefs.edit().putBoolean(GAMES_IMPORTED_SHARED_PREFERENCE_KEY, true).commit();
+                    Toast.makeText(context, "Games imported sucessfully.", Toast.LENGTH_SHORT).show();
                 } else if (response.code() == 503) {
                     prefs.edit().putBoolean(GAMES_IMPORTED_SHARED_PREFERENCE_KEY, false).commit();
                     Toast.makeText(context, "Service Unavailable. Try again later.", Toast.LENGTH_SHORT).show();
@@ -150,6 +151,7 @@ public class GameDBUtil {
     private void showLoadingDialog() {
         if (progressDialogLoading != null) {
             progressDialogLoading.setMessage("loading");
+            progressDialogLoading.setCancelable(false);
             progressDialogLoading.show();
         } else {
             progressDialogLoading = new ProgressDialog(context);

@@ -36,7 +36,9 @@ public class GameDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if(getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
 
         Bundle extras = getIntent().getExtras();
@@ -47,6 +49,9 @@ public class GameDetailActivity extends AppCompatActivity {
             game = (Game) extras.getSerializable("gameExtra");
             bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, game.getGameTitle());
             mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+            if(getSupportActionBar() != null){
+                getSupportActionBar().setTitle(game.getGameTitle());
+            }
         }else{
             bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Error getting game");
             mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);

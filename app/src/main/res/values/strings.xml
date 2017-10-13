@@ -2,6 +2,7 @@
     <string name="app_name">Retro Game Collection</string>
     <string name="title_activity_list_games">ListGamesActivity</string>
     <string name="collection_manage">Collection Manage</string>
+    <string name="collection_settings">Settings</string>
     <string name="exit">Exit</string>
     <string name="title_activity_game_detail">GameDetailActivity</string>
     <string name="timeout_error">Timeout while accessing server</string>

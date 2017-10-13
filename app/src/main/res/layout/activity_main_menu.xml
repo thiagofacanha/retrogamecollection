@@ -21,18 +21,35 @@
         app:layout_constraintVertical_bias="0.35" />
 
     <Button
-        android:id="@+id/buttonManageCollection"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:id="@+id/buttonSettings"
+        android:layout_width="168dp"
+        android:layout_height="43dp"
         android:layout_marginLeft="0dp"
         android:layout_marginRight="0dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="136dp"
         android:background="@color/colorAccentUS"
-        android:text="@string/collection_manage"
-        app:layout_constraintHorizontal_bias="0.502"
+        android:text="@string/collection_settings"
+        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <Button
+        android:id="@+id/buttonManageCollection"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/colorAccentUS"
+        android:text="@string/collection_manage"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="@+id/buttonSettings"
+        app:layout_constraintRight_toRightOf="@+id/buttonSettings"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/buttonSettings"
+        app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/buttonExit"
@@ -46,9 +63,9 @@
         android:text="@string/exit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintLeft_toLeftOf="@+id/buttonManageCollection"
-        app:layout_constraintRight_toRightOf="@+id/buttonManageCollection"
-        app:layout_constraintTop_toBottomOf="@+id/buttonManageCollection"
+        app:layout_constraintLeft_toLeftOf="@+id/buttonSettings"
+        app:layout_constraintRight_toRightOf="@+id/buttonSettings"
+        app:layout_constraintTop_toBottomOf="@+id/buttonSettings"
         app:layout_constraintVertical_bias="0.0" />
 
     <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
