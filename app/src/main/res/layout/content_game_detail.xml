@@ -30,7 +30,7 @@
                 android:layout_height="240dp"
                 android:layout_gravity="center_horizontal"
                 android:fitsSystemWindows="true"
-                android:scaleType="centerCrop"
+                android:scaleType="fitCenter"
                 app:layout_collapseMode="parallax" />
 
             <android.support.v7.widget.Toolbar
