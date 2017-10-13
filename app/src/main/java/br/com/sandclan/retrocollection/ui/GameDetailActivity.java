@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import br.com.sandclan.retrocollection.GameServiceInterface;
 import br.com.sandclan.retrocollection.R;
@@ -28,7 +29,7 @@ public class GameDetailActivity extends AppCompatActivity {
     private GameServiceInterface service;
     private ProgressDialog progressDialogLoading;
     private ImageView logo;
-
+    private FirebaseAnalytics mFirebaseAnalytics;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,10 +41,15 @@ public class GameDetailActivity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
 
-
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        Bundle bundle = new Bundle();
         if (extras != null) {
             game = (Game) extras.getSerializable("gameExtra");
+            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, game.getGameTitle());
+            mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
         }else{
+            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Error getting game");
+            mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
             finish();
         }
         logo = (ImageView) findViewById(R.id.gameFrontCover);
