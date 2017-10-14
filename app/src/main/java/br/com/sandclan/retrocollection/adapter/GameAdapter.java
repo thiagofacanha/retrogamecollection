@@ -29,6 +29,7 @@ import static br.com.sandclan.retrocollection.data.GameContentProvider.getGameFr
 import static br.com.sandclan.retrocollection.data.GameContract.GameEntry.COLUMN_COVER_FRONT;
 import static br.com.sandclan.retrocollection.data.GameContract.GameEntry.COLUMN_DESCRIPTION;
 import static br.com.sandclan.retrocollection.data.GameContract.GameEntry.COLUMN_GAME_TITLE;
+import static br.com.sandclan.retrocollection.ui.GameDetailActivity.GAME_EXTRA;
 
 public class GameAdapter extends RecyclerViewCursorAdapter<GameAdapter.GameViewHolder> implements View.OnClickListener {
     private Context context;
@@ -96,7 +97,7 @@ public class GameAdapter extends RecyclerViewCursorAdapter<GameAdapter.GameViewH
 
     private void openGameDetailActivity(Game gameExtra) {
         Intent gameDetailIntent = new Intent(context, GameDetailActivity.class);
-        gameDetailIntent.putExtra("gameExtra", gameExtra);
+        gameDetailIntent.putExtra(GAME_EXTRA, gameExtra);
         context.startActivity(gameDetailIntent);
     }
 

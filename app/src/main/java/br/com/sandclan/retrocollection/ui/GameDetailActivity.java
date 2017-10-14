@@ -1,12 +1,8 @@
 package br.com.sandclan.retrocollection.ui;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,18 +12,15 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
-import br.com.sandclan.retrocollection.GameServiceInterface;
 import br.com.sandclan.retrocollection.R;
 import br.com.sandclan.retrocollection.models.Game;
-import retrofit2.Retrofit;
 
 import static br.com.sandclan.retrocollection.GameServiceInterface.THEGAMEDB_BASE_IMAGE_URL;
+import static com.google.firebase.analytics.FirebaseAnalytics.Event.SELECT_CONTENT;
 
 public class GameDetailActivity extends AppCompatActivity {
+    public static final String GAME_EXTRA = "gameExtra";
     private Game game;
-    private Retrofit retrofit;
-    private GameServiceInterface service;
-    private ProgressDialog progressDialogLoading;
     private ImageView logo;
     private FirebaseAnalytics mFirebaseAnalytics;
     @Override
@@ -46,15 +39,17 @@ public class GameDetailActivity extends AppCompatActivity {
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         Bundle bundle = new Bundle();
         if (extras != null) {
-            game = (Game) extras.getSerializable("gameExtra");
-            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, game.getGameTitle());
-            mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+            game = (Game) extras.getSerializable(GAME_EXTRA);
+            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, game.getGameTitle());
+            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "GAME SHOWED");
+            mFirebaseAnalytics.logEvent(SELECT_CONTENT, bundle);
             if(getSupportActionBar() != null){
                 getSupportActionBar().setTitle(game.getGameTitle());
             }
         }else{
-            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Error getting game");
-            mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "ERROR");
+            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "GAME NOT FOUND");
+            mFirebaseAnalytics.logEvent(SELECT_CONTENT, bundle);
             finish();
         }
         logo = (ImageView) findViewById(R.id.gameFrontCover);
