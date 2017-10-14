@@ -7,8 +7,9 @@
 
         <ImageView
             android:id="@+id/gameFrontCover"
-            android:layout_width="80dp"
-            android:layout_height="115dp"
+            android:layout_width="@dimen/game_front_cover_width"
+            android:contentDescription="@string/game_cover"
+            android:layout_height="@dimen/game_front_cover_height"
             android:src="@drawable/default_front_cover" />
 
         <TextView
@@ -16,10 +17,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="@dimen/game_title_margin_start"
             android:layout_toEndOf="@+id/gameFrontCover"
-            android:layout_toRightOf="@+id/gameFrontCover"
             android:gravity="center"
             android:textColor="@color/colorAccentJP"
             android:textSize="16sp" />

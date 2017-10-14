@@ -1,12 +1,12 @@
 package br.com.sandclan.retrocollection.widget;
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Binder;
+import android.util.Log;
 import android.widget.AdapterView;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -14,21 +14,19 @@ import android.widget.RemoteViewsService;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import br.com.sandclan.retrocollection.R;
 import br.com.sandclan.retrocollection.data.GameContract;
-import br.com.sandclan.retrocollection.models.Game;
-import br.com.sandclan.retrocollection.models.Image;
 import br.com.sandclan.retrocollection.ui.GameDetailActivity;
 
 import static br.com.sandclan.retrocollection.GameServiceInterface.THEGAMEDB_BASE_IMAGE_URL;
 import static br.com.sandclan.retrocollection.data.GameContentProvider.getGameFromCursor;
+import static br.com.sandclan.retrocollection.ui.GameDetailActivity.GAME_EXTRA;
 
 public class WidgetService extends RemoteViewsService {
+
+    private static final String TAG = WidgetService.class.getSimpleName();
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
@@ -80,16 +78,18 @@ public class WidgetService extends RemoteViewsService {
                     bitmap = Glide.with(getApplicationContext())
                             .asBitmap()
                             .load(THEGAMEDB_BASE_IMAGE_URL.concat(data.getString(data.getColumnIndex(GameContract.GameEntry.COLUMN_COVER_FRONT))))
-                            .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                            .submit(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                             .get();
                 } catch (InterruptedException e) {
+                    Log.d(TAG,"Error using Glide.");
                 } catch (ExecutionException e) {
+                    Log.d(TAG,"Error using Glide.");
                 }
                 views.setImageViewBitmap(R.id.gameCoverWidget, bitmap);
 
 
                 final Intent detailIntent = new Intent(getApplicationContext(), GameDetailActivity.class);
-                detailIntent.putExtra("gameExtra", getGameFromCursor(data));
+                detailIntent.putExtra(GAME_EXTRA, getGameFromCursor(data));
                 views.setOnClickFillInIntent(R.id.widget_item, detailIntent);
                 return views;
             }

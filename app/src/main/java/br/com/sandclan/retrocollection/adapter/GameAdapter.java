@@ -7,27 +7,19 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import br.com.sandclan.retrocollection.R;
-import br.com.sandclan.retrocollection.data.GameContract;
 import br.com.sandclan.retrocollection.models.Game;
-import br.com.sandclan.retrocollection.models.Image;
 import br.com.sandclan.retrocollection.ui.GameDetailActivity;
 
 import static br.com.sandclan.retrocollection.GameServiceInterface.THEGAMEDB_BASE_IMAGE_URL;
 import static br.com.sandclan.retrocollection.data.GameContentProvider.getGameFromCursor;
 import static br.com.sandclan.retrocollection.data.GameContract.GameEntry.COLUMN_COVER_FRONT;
-import static br.com.sandclan.retrocollection.data.GameContract.GameEntry.COLUMN_DESCRIPTION;
 import static br.com.sandclan.retrocollection.data.GameContract.GameEntry.COLUMN_GAME_TITLE;
 import static br.com.sandclan.retrocollection.ui.GameDetailActivity.GAME_EXTRA;
 

@@ -2,11 +2,9 @@ package br.com.sandclan.retrocollection;
 
 import java.util.concurrent.TimeUnit;
 
-import br.com.sandclan.retrocollection.models.Game;
 import br.com.sandclan.retrocollection.models.GamePlatform;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 

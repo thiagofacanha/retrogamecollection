@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
@@ -63,14 +62,14 @@ public class GameDBUtil {
                         });
                         setAllGameDetails(games);
                     }
-                    prefs.edit().putBoolean(GAMES_IMPORTED_SHARED_PREFERENCE_KEY, true).commit();
+                    prefs.edit().putBoolean(GAMES_IMPORTED_SHARED_PREFERENCE_KEY, true).apply();
                     Toast.makeText(context, "Games imported sucessfully.", Toast.LENGTH_SHORT).show();
                 } else if (response.code() == 503) {
-                    prefs.edit().putBoolean(GAMES_IMPORTED_SHARED_PREFERENCE_KEY, false).commit();
+                    prefs.edit().putBoolean(GAMES_IMPORTED_SHARED_PREFERENCE_KEY, false).apply();
                     Toast.makeText(context, "Service Unavailable. Try again later.", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(context, "Error accessing server. Try again later.", Toast.LENGTH_SHORT).show();
-                    prefs.edit().putBoolean(GAMES_IMPORTED_SHARED_PREFERENCE_KEY, false).commit();
+                    prefs.edit().putBoolean(GAMES_IMPORTED_SHARED_PREFERENCE_KEY, false).apply();
                 }
                 dismissLoadingDialog();
             }

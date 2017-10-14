@@ -17,6 +17,8 @@ import br.com.sandclan.retrocollection.databasegame.GameDBUtil;
 
 
 public class MainMenuActivity extends AppCompatActivity {
+    private static final String WIDGET_UPDATE_ACTION = "android.appwidget.action.APPWIDGET_UPDATE";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,13 +57,13 @@ public class MainMenuActivity extends AppCompatActivity {
 
 
     private static void updateWidgets(Context context) {
-                       Intent dataUpdatedIntent = new Intent("android.appwidget.action.APPWIDGET_UPDATE")
+        Intent dataUpdatedIntent = new Intent(WIDGET_UPDATE_ACTION)
                                 .setPackage(context.getPackageName());
                context.sendBroadcast(dataUpdatedIntent);
     }
 
     private void startAds(){
-        MobileAds.initialize(this, "1:1047712399571:android:ace8b8afdf409edc");
+        MobileAds.initialize(this, "FIREBASE_ADMOB_API_HERE");
         AdView mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);

@@ -17,4 +17,9 @@
     <dimen name="game_list_margin_start">8dp</dimen>
     <dimen name="game_list_margin_end">8dp</dimen>
     <dimen name="game_list_margin_top">32dp</dimen>
+    <dimen name="game_cover_width">160dp</dimen>
+    <dimen name="game_cover_height">240dp</dimen>
+    <dimen name="game_front_cover_height">115dp</dimen>
+    <dimen name="game_front_cover_width">80dp</dimen>
+    <dimen name="game_title_margin_start">8dp</dimen>
 </resources>

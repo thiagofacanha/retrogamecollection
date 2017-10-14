@@ -26,8 +26,9 @@
 
             <ImageView
                 android:id="@+id/gameFrontCover"
-                android:layout_width="160dp"
-                android:layout_height="240dp"
+                android:layout_width="@dimen/game_cover_width"
+                android:layout_height="@dimen/game_cover_height"
+                android:contentDescription="@string/main_game_cover"
                 android:layout_gravity="center_horizontal"
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
@@ -51,7 +52,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
-            android:text="TextView"
             android:textAlignment="center"
             android:textColor="@color/colorAccentJP"
             app:layout_anchor="@id/gameFrontCover"

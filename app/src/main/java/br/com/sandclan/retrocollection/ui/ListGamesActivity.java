@@ -35,7 +35,6 @@ public class ListGamesActivity extends AppCompatActivity implements android.app.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        GameDBUtil gdbu = new GameDBUtil(this);
         setContentView(R.layout.activity_list_games);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

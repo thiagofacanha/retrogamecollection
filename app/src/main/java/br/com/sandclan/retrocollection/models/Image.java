@@ -8,7 +8,6 @@ import org.simpleframework.xml.ElementMap;
 import org.simpleframework.xml.Root;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
 
 

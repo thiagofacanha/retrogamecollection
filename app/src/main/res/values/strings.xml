@@ -9,4 +9,7 @@
     <string name="search">Search</string>
     <string name="game_name">Game name</string>
     <string name="favourite">favourite</string>
+    <string name="main_game_cover">Main Game Cover</string>
+    <string name="game_cover">Game Cover</string>
+    <string name="import_games_from_server">Import Games From Server</string>
 </resources>
