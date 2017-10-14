@@ -13,6 +13,7 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import br.com.sandclan.retrocollection.R;
+import br.com.sandclan.retrocollection.databasegame.GameDBUtil;
 import br.com.sandclan.retrocollection.models.Game;
 
 import static br.com.sandclan.retrocollection.GameServiceInterface.THEGAMEDB_BASE_IMAGE_URL;
@@ -20,6 +21,10 @@ import static com.google.firebase.analytics.FirebaseAnalytics.Event.SELECT_CONTE
 
 public class GameDetailActivity extends AppCompatActivity {
     public static final String GAME_EXTRA = "gameExtra";
+    public static final String GAME_SHOWED = "GAME SHOWED";
+    public static final String ERROR = "ERROR";
+    public static final String GAME_NOT_FOUND = "GAME NOT FOUND";
+    public static final String AD_BANNER_GAME_DETAIL = "1:1047712399571:android:ace8b8afdf409edc";
     private Game game;
     private ImageView logo;
     private FirebaseAnalytics mFirebaseAnalytics;
@@ -41,27 +46,27 @@ public class GameDetailActivity extends AppCompatActivity {
         if (extras != null) {
             game = (Game) extras.getSerializable(GAME_EXTRA);
             bundle.putString(FirebaseAnalytics.Param.ITEM_ID, game.getGameTitle());
-            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "GAME SHOWED");
+            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, GAME_SHOWED);
             mFirebaseAnalytics.logEvent(SELECT_CONTENT, bundle);
             if(getSupportActionBar() != null){
                 getSupportActionBar().setTitle(game.getGameTitle());
             }
         }else{
-            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "ERROR");
-            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "GAME NOT FOUND");
+            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, ERROR);
+            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, GAME_NOT_FOUND);
             mFirebaseAnalytics.logEvent(SELECT_CONTENT, bundle);
             finish();
         }
         logo = (ImageView) findViewById(R.id.gameFrontCover);
         ((TextView) findViewById(R.id.overview)).setText(game.getOverview());
         if (game.getImages() != null) {
-            Glide.with(GameDetailActivity.this).load(THEGAMEDB_BASE_IMAGE_URL.concat(game.getImages().get(0).getBoxart().get("front"))).into(logo);
+            Glide.with(GameDetailActivity.this).load(THEGAMEDB_BASE_IMAGE_URL.concat(game.getImages().get(0).getBoxart().get(GameDBUtil.FRONT))).into(logo);
         }
         startAds();
     }
 
     private void startAds(){
-        MobileAds.initialize(this, "1:1047712399571:android:ace8b8afdf409edc");
+        MobileAds.initialize(this, AD_BANNER_GAME_DETAIL);
         AdView mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);

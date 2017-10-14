@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import br.com.sandclan.retrocollection.databasegame.GameDBUtil;
 import br.com.sandclan.retrocollection.models.Game;
 import br.com.sandclan.retrocollection.models.Image;
 
@@ -214,7 +215,7 @@ public class GameContentProvider extends ContentProvider {
         Game game = new Game();
         List<Image> images = new ArrayList<>();
         HashMap<String, String> frontCoverHash = new HashMap<>();
-        frontCoverHash.put("front", data.getString(data.getColumnIndex(GameContract.GameEntry.COLUMN_COVER_FRONT)));
+        frontCoverHash.put(GameDBUtil.FRONT, data.getString(data.getColumnIndex(GameContract.GameEntry.COLUMN_COVER_FRONT)));
         Image frontCover = new Image();
         frontCover.setBoxart(frontCoverHash);
         images.add(frontCover);

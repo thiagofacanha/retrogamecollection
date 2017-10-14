@@ -12,4 +12,8 @@
     <string name="main_game_cover">Main Game Cover</string>
     <string name="game_cover">Game Cover</string>
     <string name="import_games_from_server">Import Games From Server</string>
+    <string name="loading">loading</string>
+    <string name="games_imported_success">Games imported successfully.</string>
+    <string name="service_unavailable">Service Unavailable. Try again later.</string>
+    <string name="error_access_server">Error accessing server. Try again later.</string>
 </resources>

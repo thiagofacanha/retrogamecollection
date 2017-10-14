@@ -9,6 +9,9 @@ import android.content.Intent;
 
 
 public class WidgetAlarm extends BroadcastReceiver {
+
+    public static final String ANDROID_APPWIDGET_ACTION_APPWIDGET_UPDATE = "android.appwidget.action.APPWIDGET_UPDATE";
+
     @Override
     public void onReceive(Context context, Intent intent) {
         updateWidgets(context);
@@ -22,7 +25,7 @@ public class WidgetAlarm extends BroadcastReceiver {
     }
 
     private static void updateWidgets(Context context) {
-        Intent dataUpdatedIntent = new Intent("android.appwidget.action.APPWIDGET_UPDATE")
+        Intent dataUpdatedIntent = new Intent(ANDROID_APPWIDGET_ACTION_APPWIDGET_UPDATE)
                 .setPackage(context.getPackageName());
         context.sendBroadcast(dataUpdatedIntent);
     }

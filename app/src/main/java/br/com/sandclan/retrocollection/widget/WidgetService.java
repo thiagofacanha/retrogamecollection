@@ -27,6 +27,7 @@ import static br.com.sandclan.retrocollection.ui.GameDetailActivity.GAME_EXTRA;
 public class WidgetService extends RemoteViewsService {
 
     private static final String TAG = WidgetService.class.getSimpleName();
+    public static final String RANDOM_LIMIT_1 = " RANDOM() LIMIT 1";
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
@@ -48,7 +49,7 @@ public class WidgetService extends RemoteViewsService {
                         null,
                         null,
                         null,
-                        " RANDOM() LIMIT 1");
+                        RANDOM_LIMIT_1);
                 Binder.restoreCallingIdentity(identityToken);
             }
 
