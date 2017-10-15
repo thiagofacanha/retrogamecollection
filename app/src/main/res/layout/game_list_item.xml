@@ -21,6 +21,6 @@
             android:layout_toEndOf="@+id/gameFrontCover"
             android:gravity="center"
             android:textColor="@color/colorAccentJP"
-            android:textSize="16sp" />
+            android:textSize="@dimen/game_title_text_size" />
 
 </RelativeLayout>

@@ -10,9 +10,12 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import br.com.sandclan.retrocollection.R;
 import br.com.sandclan.retrocollection.adapter.GameAdapter;
@@ -26,6 +29,7 @@ public class ListGamesActivity extends AppCompatActivity implements android.app.
     private Button searchButton;
     private RecyclerView gameListRecycleView;
     private int gameListPosition = 0;
+    private String gameListSearch = "";
     private final String LIST_POSITION = "gameListPosition";
 
     @Override
@@ -34,7 +38,22 @@ public class ListGamesActivity extends AppCompatActivity implements android.app.
         setContentView(R.layout.activity_list_games);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        if(getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(getString(R.string.app_name));
+        }
+
         searchText = (EditText) findViewById(R.id.searchText);
+        searchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    listGames();
+                }
+                return false;
+            }
+        });
+
         getLoaderManager().initLoader(LOADER_ID, null, this);
         listGames();
         searchButton = (Button) findViewById(R.id.searchButton);
@@ -57,13 +76,22 @@ public class ListGamesActivity extends AppCompatActivity implements android.app.
         });
 
         if (savedInstanceState != null){
+            searchText.setText(gameListSearch);
+
             gameListRecycleView.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    gameListRecycleView.scrollToPosition(gameListPosition);
-                    gameListPosition = 0;
+                    listGames();
+                    gameListRecycleView.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            gameListRecycleView.scrollToPosition(gameListPosition);
+                            gameListPosition = 0;
+                        }
+                    }, 100);
                 }
             }, 100);
+
         }
 
     }
@@ -76,6 +104,7 @@ public class ListGamesActivity extends AppCompatActivity implements android.app.
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         gameListPosition = savedInstanceState.getInt(LIST_POSITION);
+        gameListSearch = searchText.getText().toString();
     }
 
 

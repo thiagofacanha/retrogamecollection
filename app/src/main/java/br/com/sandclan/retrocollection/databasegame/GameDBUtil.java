@@ -100,7 +100,6 @@ public class GameDBUtil {
                         setGameDetail(game);
                     }
                 }
-                dismissLoadingDialog();
             }
 
             @Override
@@ -108,7 +107,6 @@ public class GameDBUtil {
                 if (t instanceof SocketTimeoutException) {
                     Toast.makeText(context, R.string.timeout_error, Toast.LENGTH_SHORT).show();
                 }
-                dismissLoadingDialog();
             }
         });
 

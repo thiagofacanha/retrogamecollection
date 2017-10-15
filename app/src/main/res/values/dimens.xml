@@ -22,4 +22,9 @@
     <dimen name="game_front_cover_height">115dp</dimen>
     <dimen name="game_front_cover_width">80dp</dimen>
     <dimen name="game_title_margin_start">8dp</dimen>
+    <dimen name="game_title_text_size">16sp</dimen>
+    <dimen name="recycler_margin_bottom">8dp</dimen>
+    <dimen name="recycler_margin_start">8dp</dimen>
+    <dimen name="recycler_margin_end">8dp</dimen>
+    <dimen name="recycler_margin_top">24dp</dimen>
 </resources>
